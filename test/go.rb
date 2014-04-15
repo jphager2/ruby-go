@@ -1,4 +1,4 @@
-require_relative '../lib/board'
+require_relative '../lib/go'
 
 require 'minitest/autorun'
 require 'stringio'
