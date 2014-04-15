@@ -66,4 +66,11 @@ class GoGameTest < MiniTest::Unit::TestCase
     game = capture_two
     assert_equal 2, game.captures.length 
   end 
+
+  def test_illegal_move
+    game = GoGame.new(board: 9)
+    game.place_black_stone(0,1)
+    game.place_black_stone(1,0)
+    assert_raises(GoGame::IllegalMove) {game.place_white_stone(0,0)}
+  end
 end

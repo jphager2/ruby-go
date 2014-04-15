@@ -51,15 +51,15 @@ class GoBoard
   end
 
   def liberties(stone)
-    group = get_stone_group(stone)
+    group = stone_group_for(stone)
 
     group.each_with_object([]) do |stone, libs| 
       libs << stone.liberties(self)
     end.flatten.uniq.count
   end
 
-  def get_stone_group(stone)
-    stone.get_group(self)
+  def stone_group_for(stone)
+    stone.group(self)
   end
 end
 
@@ -97,7 +97,7 @@ class Stone
     board.to_a[@y][@x] = self
   end
 
-  def get_group(board, group = [])
+  def group(board, group = [])
     return [self] if @color == :empty 
 
     stones_around = board.stones_around(*self.to_cord)
@@ -107,7 +107,7 @@ class Stone
 
       if stone.color == self.color
         unless group.any? {|s| s.object_id == stone.object_id}
-          group += stone.get_group(board, group)
+          group += stone.group(board, group)
         end
       end
     end
@@ -115,13 +115,15 @@ class Stone
     group.flatten.uniq
   end
 
-
   def liberties(board)
     return [self] if @color == :empty 
      
     board.stones_around(*self.to_cord).each_with_object([]) do |s, libs| 
       libs << s if s.color == :empty 
     end 
+  end
+
+  class PlacementError < Exception
   end
 end
 
@@ -143,8 +145,6 @@ class WhiteStone < Stone
   end
 end
 
-class Stone::PlacementError < Exception
-end
 
 class GoGame 
 
@@ -180,8 +180,12 @@ class GoGame
 
       @board.place_stone(stone) #temporarily
       check_capture
+      check_illegal_move
 
       print_board
+    end
+
+    def check_illegal_move
     end
 
     def check_capture
@@ -193,7 +197,7 @@ class GoGame
     end
 
     def capture_group(stone)
-      @board.get_stone_group(stone).each do |stone|
+      @board.stone_group_for(stone).each do |stone|
         capture(stone)
       end
     end
@@ -203,4 +207,10 @@ class GoGame
       x, y = stone.to_cord
       @board.place_stone(Stone.new(x, y))
     end
+  
+  public
+
+  class IllegalMove < Exception
+  end
 end
+
