@@ -64,7 +64,7 @@ class GoGameTest < MiniTest::Unit::TestCase
 
   def test_capture_two_stones
     game = capture_two
-    assert_equal 2, game.captures.length 
+    assert_equal 2, game.captures 
   end 
 
   def test_illegal_move

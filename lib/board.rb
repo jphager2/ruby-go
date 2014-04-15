@@ -1,8 +1,6 @@
 class GoBoard 
   Color = {black: "x", white: "o", empty: "-"}
 
-  attr_accessor :moves
-
   def initialize(size)
     @board = []
     (1..size).each_with_object(@board) do |row_num, board| 
@@ -10,8 +8,6 @@ class GoBoard
         row << Stone.new(col_num, row_num)
       end
     end
-
-    @moves = []
   end
 
   def to_str
@@ -47,7 +43,6 @@ class GoBoard
 
   def place_stone(stone)
     stone.place_on_board(self)
-    @moves << stone
   end
 
   def liberties(stone)
@@ -148,11 +143,11 @@ end
 
 class GoGame 
 
-  attr_reader :board, :captures
+  attr_reader :board
 
   def initialize(options)
     @board = GoBoard.new(options[:board])
-    @captures = []
+    @moves = [] 
   end
 
   def place_white_stone(x, y)
@@ -167,6 +162,25 @@ class GoGame
     puts @board.to_s
   end
 
+  def captures 
+    @moves.inject(0) do 
+      |total, move| total + (move[:captures] || []).length
+    end
+  end
+  
+  def undo
+    captures = @moves.last[:captures]
+    stone = @moves.last[:stone]
+
+    captures.each do |stone|
+      @board.place_stone(stone)
+    end
+    @board.place_stone(Stone.new(*stone.to_cord))
+    @moves.pop
+
+    print_board
+  end
+
   private
     def place_stone(stone)
       bad_cord = stone.to_cord.any? do |cord| 
@@ -178,7 +192,8 @@ class GoGame
           "Coordinates need to be between 0..#{@board.to_a.length}" 
       end
 
-      @board.place_stone(stone) #temporarily
+      @moves << {stone: stone, captures: []}
+      @board.place_stone(stone) 
       check_capture
       check_illegal_move
 
@@ -186,17 +201,16 @@ class GoGame
     end
 
     def check_illegal_move
-      last_stone = @board.moves.last
+      last_stone = @moves.last[:stone]
 
       unless @board.liberties(last_stone) > 0
-        @board.moves.last.pop
-        @board.place_stone(Stone.new(*last_stone.to_cord))
+        undo
         raise IllegalMove
       end
     end
 
     def check_capture
-      last_stone = @board.moves.last 
+      last_stone = @moves.last[:stone] 
       
       @board.stones_around(*last_stone.to_cord).each do |stone|
         capture_group(stone) if board.liberties(stone) == 0
@@ -210,7 +224,7 @@ class GoGame
     end
 
     def capture(stone)
-      @captures << stone 
+      (@moves.last[:captures] ||= []) << stone 
       x, y = stone.to_cord
       @board.place_stone(Stone.new(x, y))
     end
