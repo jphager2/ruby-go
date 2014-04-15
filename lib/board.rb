@@ -186,6 +186,13 @@ class GoGame
     end
 
     def check_illegal_move
+      last_stone = @board.moves.last
+
+      unless @board.liberties(last_stone) > 0
+        @board.moves.last.pop
+        @board.place_stone(Stone.new(*last_stone.to_cord))
+        raise IllegalMove
+      end
     end
 
     def check_capture
