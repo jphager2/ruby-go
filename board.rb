@@ -15,6 +15,10 @@ class Board
     end
   end
 
+  def size
+    @board.length
+  end
+
   def empty?
     !@board.flatten.any? do |s| 
       !s.empty?

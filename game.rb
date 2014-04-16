@@ -8,6 +8,9 @@ class Game
 
   def view 
     puts @board.to_s
+    puts "   " + "_"*(@board.size * 2)
+    puts "   Prisoners || White: #{captures[:black]} | Black: #{captures[:white]}"
+    puts "   " + "-"*(@board.size * 2)
   end
 
   def black(x, y)

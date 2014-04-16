@@ -16,6 +16,8 @@ def game.prompt_for_turn
   end
 end 
 
+system "clear"
+game.view
 turn = 0
 until game.passes >= 2
   begin 
@@ -31,9 +33,13 @@ until game.passes >= 2
       game.white(*ans) if ans
     end
 
+    system "clear"
+    game.view
+
     turn += 1
   rescue Game::IllegalMove
     next
   end
 end
 
+system "clear"
