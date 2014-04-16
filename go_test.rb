@@ -96,7 +96,7 @@ class GoTest < Minitest::Unit::TestCase
     game.white(3,2)
     game.black(3,3)
     3.times {game.undo}
-    assert_equal Liberty.new(2,2), game.board.at(2,3)
+    assert_equal Liberty.new(2,2), game.board.at(2,2)
   end
 
   def test_can_pass

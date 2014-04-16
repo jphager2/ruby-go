@@ -78,11 +78,10 @@ end
 
 class Game 
 
-  attr_reader :board, :passes
+  attr_reader :board
   def initialize(board: 19)
     @board = Board.new(board)
     @moves = []
-    @passes = 0
   end
 
   def view 
@@ -101,6 +100,16 @@ class Game
     @moves << {stone: NullStone.new(), captures: [], pass: true} 
   end
 
+  def undo 
+    move = @moves.pop
+    @board.remove(move[:stone])
+    move[:captures].each {|stone| @board.place(stone)}
+  end
+
+  def passes
+    @moves.inject(0) {|total, move| move[:pass] ? total + 1 : 0}
+  end 
+
   def captures
     @moves.each_with_object({black: 0, white: 0}) do |move, total|
       move[:captures].each do |capture|
@@ -111,6 +120,7 @@ class Game
 
   private
     def play(stone)
+      @passes = 0
       @board.place(stone)
       @moves << {stone: stone, captures: [], pass: false}
 
