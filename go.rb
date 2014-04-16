@@ -125,6 +125,28 @@ class Game
       @moves << {stone: stone, captures: [], pass: false}
 
       capture
+      suicide
+      ko
+    end
+
+    def ko 
+      return if @moves.length < 2 or !@moves[-2][:captures] 
+
+      captures = @moves[-2][:captures]
+      stone = @moves.last[:stone]
+
+      if captures.include?(stone) 
+        raise IllegalMove, 
+          "You cannot capture the ko, play a ko threat first"
+      end
+    end
+
+    def suicide
+      stone = @moves.last[:stone]
+      unless @board.liberties(stone) > 0
+        undo
+        raise IllegalMove, "You cannot play a suicide."
+      end
     end
 
     def capture
@@ -166,7 +188,8 @@ class Stone
 
   def place_on_board(board)
     unless board.at(@x, @y).empty? 
-      raise Game::IllegalMove 
+      raise Game::IllegalMove, 
+        "You cannot place a stone on top of another stone."  
     end
     board.board[@y][@x] = self
   end
