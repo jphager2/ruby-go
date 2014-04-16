@@ -78,10 +78,15 @@ end
 
 class Game 
 
-  attr_reader :board
+  attr_reader :board, :passes
   def initialize(board: 19)
     @board = Board.new(board)
     @moves = []
+    @passes = 0
+  end
+
+  def view 
+    puts @board.to_s
   end
 
   def black(x, y)
@@ -90,6 +95,10 @@ class Game
 
   def white(x, y)
     play(WhiteStone.new(x,y))
+  end
+
+  def pass
+    @moves << {stone: NullStone.new(), captures: [], pass: true} 
   end
 
   def captures
@@ -214,3 +223,15 @@ class WhiteStone < Stone
     @color = :white
   end
 end
+
+class NullStone < Stone 
+  def initialize(*args)
+    @x, @y = nil, nil
+  end
+  
+  def remove_from_board(board)
+  end
+end
+
+
+  

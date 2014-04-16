@@ -1,6 +1,8 @@
 require_relative 'go.rb'
 
+
 require 'minitest/autorun'
+require 'stringio'
 
 class GoTest < Minitest::Unit::TestCase 
   def setup
@@ -18,6 +20,16 @@ class GoTest < Minitest::Unit::TestCase
 
   def test_empty_board_looks_like_empty_board
     assert_includes @game.board.to_s, @row_9_str 
+  end
+
+  def test_game_can_print_the_board
+    out = StringIO.new
+    temp = $stdout
+    $stdout = out
+    @game.view
+    $stdout = temp
+    out.rewind
+    assert_includes out.read, @row_9_str
   end
 
   def test_game_can_place_a_stone
@@ -68,6 +80,30 @@ class GoTest < Minitest::Unit::TestCase
     game.white(3,2)
     game.white(3,3)
     assert_equal 3, game.captures[:black]
+  end
+
+  def test_can_undo
+    game = Game.new()
+    game.black(2,2)
+    game.white(2,3)
+    game.undo
+    assert_equal Liberty.new(2,3), game.board.at(2,3)
+  end
+
+  def test_can_undo_until_beginning
+    game = Game.new()
+    game.black(2,2)
+    game.white(3,2)
+    game.black(3,3)
+    3.times {game.undo}
+    assert_equal Liberty.new(2,2), game.board.at(2,3)
+  end
+
+  def test_can_pass
+    game = Game.new
+    game.pass 
+    game.pass
+    assert_equal 2, game.passes
   end
 end
 
