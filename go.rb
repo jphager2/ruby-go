@@ -4,8 +4,9 @@ class Board
   attr_accessor :board
   def initialize(size)
     @board = []
-    (0..size-1).to_a.each do |y|
-      row_ary = (0..size-1).to_a.each_with_object([]) do |x, row| 
+    0.upto(size) do |y|
+      row = []
+      0.upto(size) do |x| 
         row << Stone.new(x, y) 
       end
       @board << row_ary
@@ -41,8 +42,8 @@ end
 class Game 
 
   attr_reader :board
-  def initialize(options)
-    @board = Board.new(options[:board])
+  def initialize(board: 19)
+    @board = Board.new(board)
   end
 
   def black(x, y)
