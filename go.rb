@@ -120,13 +120,10 @@ class Game
 
   private
     def play(stone)
-      @passes = 0
       @board.place(stone)
       @moves << {stone: stone, captures: [], pass: false}
 
-      capture
-      suicide
-      ko
+      capture; suicide; ko
     end
 
     def ko 
@@ -178,8 +175,7 @@ class Stone
 
   attr_reader :color
   def initialize(x, y)
-    @x = x
-    @y = y
+    @x, @y = x, y
     @color = :none
   end
 
@@ -266,6 +262,3 @@ class NullStone < Stone
   def remove_from_board(board)
   end
 end
-
-
-  
