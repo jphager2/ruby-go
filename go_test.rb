@@ -105,6 +105,34 @@ class GoTest < Minitest::Unit::TestCase
     game.pass
     assert_equal 2, game.passes
   end
+
+  def test_cannot_play_a_suicide
+    game = Game.new
+    game.black(3,3)
+    game.white(2,3)
+    game.white(4,3)
+    game.white(3,4)
+    game.white(3,2)
+    assert_raises(Game::IllegalMove) do
+      game.black(3,3)
+    end
+  end
+
+  def test_cannot_play_a_ko
+    game = Game.new
+    game.black(3,3)
+    game.white(2,3)
+    game.white(4,3)
+    game.white(3,4)
+    game.white(3,2)
+    game.black(4,2)
+    game.black(4,4)
+    game.black(5,3)
+    game.black(3,3)
+    assert_raises(Game::IllegalMove) do
+      game.white(4,3)
+    end
+  end
 end
 
 
