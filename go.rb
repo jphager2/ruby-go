@@ -9,7 +9,7 @@ class Board
     0.upto(size) do |y|
       row = []
       0.upto(size) do |x| 
-        row << Stone.new(x, y) 
+        row << Liberty.new(x, y) 
       end
       @board << row
     end
@@ -17,7 +17,7 @@ class Board
 
   def empty?
     !@board.flatten.any? do |s| 
-      s.kind_of?(BlackStone) or s.kind_of?(WhiteStone)
+      !s.empty?
     end
   end
 
@@ -26,7 +26,7 @@ class Board
   end
 
   def around(x, y = :y_not_given)
-    x, y = x.to_coord if x.class.ancestors.include?(Stone)
+    x, y = x.to_coord if x.kind_of?(Stone)
     stones = [] 
     stones << at(x-1, y) unless x == 0 
     stones << at(x+1, y) unless x == (@board.length - 1) 
@@ -138,31 +138,35 @@ class Stone
   def initialize(x, y)
     @x = x
     @y = y
-    @color = :empty
+    @color = :none
+  end
+
+  def empty?
+    @color == :empty
   end
 
   def place_on_board(board)
-    unless @color == :empty or board.at(@x, @y).color == :empty 
+    unless board.at(@x, @y).empty? 
       raise Game::IllegalMove 
     end
     board.board[@y][@x] = self
   end
 
   def remove_from_board(board)
-    board.board[@y][@x] = Stone.new(*self.to_coord)
+    board.board[@y][@x] = Liberty.new(*self.to_coord)
   end
 
   def liberties(board)
-    return [self] if self.color == :empty
-    board.around(self).select {|stone| stone.color == :empty} 
+    board.around(self).select {|stone| stone.empty?} 
   end
 
   def group(board, stones = [])
+    return stones if stones.any? {|stone| stone.eql?(self)} 
     stones << self
 
     board.around(self).each do |stone|
       if stone.color == @color
-        #group(stone, stones)
+        stone.group(board, stones)
       end
     end
 
@@ -183,6 +187,17 @@ class Stone
 
   def ==(other)
     (self.color == other.color) and (self.to_coord == other.to_coord)
+  end
+end
+
+class Liberty < Stone 
+  def initialize(x, y)
+    super
+    @color = :empty
+  end
+
+  def liberties(board)
+    [self]
   end
 end
 

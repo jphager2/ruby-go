@@ -17,18 +17,16 @@ class GoTest < Minitest::Unit::TestCase
   end
 
   def test_empty_board_looks_like_empty_board
-    assert_includes @game.board.to_s, @row_9_str
+    assert_includes @game.board.to_s, @row_9_str 
   end
 
   def test_game_can_place_a_stone
-    skip
     game = Game.new(board: 9)
     game.black(2,2)
-    assert_equal game.board.at(2,2), BlackStone.new(2,2)
+    assert_equal BlackStone.new(2,2), game.board.at(2,2) 
   end
 
   def test_cannot_place_a_stone_on_top_of_another_stone
-    skip
     game = Game.new(board: 9)
     game.black(2,2)
     assert_raises(Game::IllegalMove) do
@@ -43,22 +41,20 @@ class GoTest < Minitest::Unit::TestCase
     game.white(2,3)
     game.white(1,2)
     game.white(3,2)
-    assert_equal game.captures[:black], 1
+    assert_equal 1, game.captures[:black]
   end
 
   def test_capture_removes_stone
-    skip
     game = Game.new(board: 9)
     game.black(2,2)
     game.white(2,1)
     game.white(2,3)
     game.white(1,2)
     game.white(3,2)
-    assert_equal game.board.at(2,2), Liberty.new(2,2)
+    assert_equal Liberty.new(2,2), game.board.at(2,2) 
   end
 
   def test_capture_three_stones
-    skip
     game = Game.new(board: 9)
     game.black(2,1)
     game.black(2,2)
@@ -71,7 +67,7 @@ class GoTest < Minitest::Unit::TestCase
     game.white(3,1)
     game.white(3,2)
     game.white(3,3)
-    assert_equal game.captures[:black], 3
+    assert_equal 3, game.captures[:black]
   end
 end
 
