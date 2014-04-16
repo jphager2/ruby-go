@@ -7,30 +7,36 @@ class GoTest < Minitest::Unit::TestCase
     b,w = Board::Colors[:black], Board::Colors[:white] 
     e   = Board::Colors[:empty]
 
-    @empty_board = "" 
-    9.times {@empty_board << (e*9).split(//).join(' ') << "\n"}
+    @row_9_str = "_ _ _ _ _ _ _ _ _\n" 
+
+    @game = Game.new(board: 9)
   end
 
   def test_game_has_blank_board_when_initialized
-    game = Game.new(board: 9)
-    board = game.board
-    assert game.board.empty?
+    assert @game.board.empty?
   end
 
   def test_empty_board_looks_like_empty_board
-    game = Game.new(board: 9)
-    board = game.board.to_s 
-    assert_includes board, @empty_board
+    assert_includes @game.board.to_s, @row_9_str
   end
 
-  def test_game_can_place_place_a_stone
+  def test_game_can_place_a_stone
+    skip
     game = Game.new(board: 9)
     game.black(2,2)
     assert_equal game.board.at(2,2), BlackStone.new(2,2)
   end
 
+  def test_cannot_place_a_stone_on_top_of_another_stone
+    skip
+    game = Game.new(board: 9)
+    game.black(2,2)
+    assert_raises(Game::IllegalMove) do
+      game.white(2,2)
+    end
+  end
+
   def test_can_capture_one_stone
-    skip 
     game = Game.new(board: 9)
     game.black(2,2)
     game.white(2,1)
