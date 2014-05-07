@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/go'
+require_relative '../lib/ruby-go'
 
 game = Game.new
 
