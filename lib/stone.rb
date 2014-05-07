@@ -6,6 +6,12 @@ class Stone
     @color = :none
   end
 
+  def to_sgf
+    x = Game::LETTERS[@x]
+    y = Game::LETTERS[@y]
+    ";#{color.to_s[0].upcase}[#{x+y}]"
+  end
+
   def empty?
     @color == :empty
   end
@@ -87,5 +93,9 @@ class NullStone < Stone
   end
   
   def remove_from_board(board)
+  end
+
+  def to_sfg
+    ""
   end
 end

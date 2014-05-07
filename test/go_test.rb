@@ -1,10 +1,7 @@
-require_relative '../lib/go.rb'
-
-
-require 'minitest/autorun'
+require_relative 'test_helper'
 require 'stringio'
 
-class GoTest < Minitest::Unit::TestCase 
+class GoTest < Minitest::Test 
   def setup
     b,w = Board::Colors[:black], Board::Colors[:white] 
     e   = Board::Colors[:empty]

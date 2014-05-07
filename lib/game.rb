@@ -1,16 +1,34 @@
 class Game 
 
+  LETTERS = ('a'..'z').to_a
+
   attr_reader :board
   def initialize(board: 19)
     @board = Board.new(board)
     @moves = []
   end
 
+  def save(name="my_go_game")
+    tree = SGF::Parser.new.parse(to_sgf)
+    tree.save(name + '.sgf')
+  end
+
+  def to_sgf
+    sgf = "(;GM[1]FF[4]CA[UTF-8]AP[jphager2]SZ[19]PW[White]PB[Black]"
+
+    @moves.each do |move|
+      sgf << move[:stone].to_sgf
+    end
+
+    sgf << ')'
+  end
+
   def view 
-    puts @board.to_s
-    puts "   " + "_"*(@board.size * 2)
-    puts "   Prisoners || White: #{captures[:black]} | Black: #{captures[:white]}"
-    puts "   " + "-"*(@board.size * 2)
+    puts  @board.to_s
+    puts  "   " + "_"*(@board.size * 2)
+    print "   Prisoners || White: #{captures[:black]} |"
+    puts  " Black: #{captures[:white]}"
+    puts  "   " + "-"*(@board.size * 2)
   end
 
   def black(x, y)
