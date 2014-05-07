@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.name        = 'ruby-go'
   s.version     = '0.0.0'
 	s.date        = "#{Time.now.strftime("%Y-%m-%d")}"
-	s.homepage    = 'https://github.com/jphager2/gotasku'
+	s.homepage    = 'https://github.com/jphager2/ruby-go'
   s.summary     = 'The game of Go, writen in Ruby'
   s.description = 'A gem to play go and save games as sgf'
   s.authors     = ['jphager2']
