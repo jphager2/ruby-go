@@ -1,4 +1,4 @@
-require_relative 'go.rb'
+require_relative '../lib/go.rb'
 
 
 require 'minitest/autorun'
