@@ -130,6 +130,32 @@ class GoTest < Minitest::Test
       game.white(4,3)
     end
   end
+
+  def big_capture_area_game
+    game = Game.new
+    game.black(0,0)
+    game.white(1,1)
+    game.black(0,1)
+    game.white(0,2)
+    game.black(1,0)
+    game.white(2,0)
+    game
+  end
+
+  def test_can_play_in_previous_capture_area_that_is_not_a_ko
+    game = big_capture_area_game
+    assert_equal Liberty.new(0,0), game.board.at(0,0) 
+    game.black(0,0)
+    assert_equal BlackStone.new(0,0), game.board.at(0,0) 
+
+    game = big_capture_area_game
+    assert_equal Liberty.new(0,1), game.board.at(0,1) 
+    game.black(0,1)
+    assert_equal BlackStone.new(0,1), game.board.at(0,1) 
+
+    game = big_capture_area_game
+    assert_equal Liberty.new(1,0), game.board.at(1,0) 
+    game.black(1,0)
+    assert_equal BlackStone.new(1,0), game.board.at(1,0) 
+  end
 end
-
-

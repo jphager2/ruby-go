@@ -75,7 +75,7 @@ class Game
       captures = @moves[-2][:captures]
       stone = @moves.last[:stone]
 
-      if captures.include?(stone) 
+      if captures == [stone]
         undo
         raise IllegalMove, 
           "You cannot capture the ko, play a ko threat first"
