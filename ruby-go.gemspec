@@ -1,3 +1,5 @@
+require_relative 'lib/ruby-go/version'
+
 files = Dir.glob(Dir.pwd + '/**/*.rb')
 files.collect! {|file| file.sub(Dir.pwd + '/', '')}
 files -= files.select {|file| file =~ /scripts/}
@@ -5,7 +7,7 @@ files.push('LICENSE', 'README.md', 'Rakefile', 'bin/ruby-go.rb')
 
 Gem::Specification.new do |s|
   s.name        = 'ruby-go'
-  s.version     = '0.1.1'
+  s.version     = RubyGo::VERSION
 	s.date        = "#{Time.now.strftime("%Y-%m-%d")}"
 	s.homepage    = 'https://github.com/jphager2/ruby-go'
   s.summary     = 'The game of Go, writen in Ruby'
