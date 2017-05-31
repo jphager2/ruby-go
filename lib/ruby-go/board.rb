@@ -2,6 +2,7 @@ module RubyGo
   class Board
     Colors = {black: 'x', white: 'o', empty: '_'}
 
+    # rename board to internal_board, and make it private
     attr_accessor :board
     def initialize(size)
       @board = []
@@ -20,6 +21,8 @@ module RubyGo
       @board.length
     end
 
+    # use all?
+    #
     def empty?
       !@board.flatten.any? do |s| 
         !s.empty?

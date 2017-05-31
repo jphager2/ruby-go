@@ -1,14 +1,22 @@
 module RubyGo
   class Game 
 
+    # This makes more sense to be in Board
+    #
     LETTERS = ('a'..'z').to_a
 
+    # Board does not need to be publicly exposed
+    # Moves can be also a private attr_reader
+    #
     attr_reader :board
     def initialize(board: 19)
       @board = Board.new(board)
       @moves = []
     end
 
+    # The game does not need to be responsible for knowing how to serialize
+    # and save itself.
+    #
     def save(name="my_go_game")
       tree = SGF::Parser.new.parse(to_sgf)
       tree.save(name + '.sgf')
@@ -24,6 +32,8 @@ module RubyGo
       sgf << ')'
     end
 
+    # Access @board through the getter method
+    #
     def view 
       puts  @board.to_s
       puts  "   " + "_"*(@board.size * 2)
@@ -48,6 +58,9 @@ module RubyGo
       pass(:white)
     end
 
+    # This should be a private method OR change public api to use #play and 
+    # #pass only (instead of #black, #white, #black_pass, #white_pass.
+    #
     def pass(color)
       @moves << {stone: NullStone.new(color), captures: [], pass: true} 
     end
@@ -58,10 +71,16 @@ module RubyGo
       move[:captures].each {|stone| @board.place(stone)}
     end
 
+    # Passes do not need to be counted every time. Pass count can be stored
+    # in the Game
+    #
     def passes
       @moves.inject(0) {|total, move| move[:pass] ? total + 1 : 0}
     end 
 
+    # This does not need to be calculated each time. Capture counts can be
+    # stored in the Game
+    #
     def captures
       @moves.each_with_object({black: 0, white: 0}) do |move, total|
         move[:captures].each do |capture|
@@ -79,6 +98,9 @@ module RubyGo
       capture; suicide; ko
     end
 
+    # The name of the method does not tell me what it does. #check_ko_rule
+    # or something similar would be better
+    #
     def ko 
       return if @moves.length < 2 or !@moves[-2][:captures] 
 
@@ -92,6 +114,8 @@ module RubyGo
       end
     end
 
+    # Same as comment above. #check_suicide_rule would be better.
+    #
     def suicide
       stone = @moves.last[:stone]
       unless @board.liberties(stone) > 0
@@ -109,6 +133,7 @@ module RubyGo
       captures.each {|stone| capture_group(stone)}
     end
 
+    # This name is confusing. #capture_stones or #remove_captured_stones
     def capture_group(stone)
       @board.group_of(stone).each {|stone| capture_stone(stone)}
     end
@@ -120,6 +145,8 @@ module RubyGo
 
     public
 
+    # This can inherit from StandardError
+    #
     class IllegalMove < Exception
     end
   end

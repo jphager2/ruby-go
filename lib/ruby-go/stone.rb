@@ -7,6 +7,7 @@ module RubyGo
       @color = :none
     end
 
+    # Stone doesn't need to know how to serialize itself.
     def to_sgf
       x = Game::LETTERS[@x]
       y = Game::LETTERS[@y]
@@ -17,6 +18,9 @@ module RubyGo
       @color == :empty
     end
 
+    # The stone should not be responsible for placing itself on the board,
+    # or for raising exceptions for illegal state.
+    #
     def place_on_board(board)
       unless board.at(@x, @y).empty? 
         raise Game::IllegalMove, 
@@ -25,14 +29,20 @@ module RubyGo
       board.board[@y][@x] = self
     end
 
+    # The stone should not be responsible for removing itself on the board
+    #
     def remove_from_board(board)
       board.board[@y][@x] = Liberty.new(*self.to_coord)
     end
 
+    # The stone should not be responsible for knowing what is around it,
+    #
     def liberties(board)
       board.around(self).select {|stone| stone.empty?} 
     end
 
+    # The stone should not be responsible for knowing what is around it,
+    #
     def group(board, stones = [])
       return stones if stones.any? {|stone| stone.eql?(self)} 
       stones << self
@@ -63,6 +73,9 @@ module RubyGo
     end
   end
 
+  # Good point made that separate classes for BlackStone and WhiteStone
+  # (etc) will potentially make the code harder to maintain.
+  #
   class Liberty < Stone 
     def initialize(x, y)
       super
