@@ -1,16 +1,18 @@
 module RubyGo
   class Stone
+    LETTERS = ('a'..'z').to_a
 
-    attr_reader :color
-    def initialize(x, y, color)
-      @x, @y = x, y
+    attr_reader :color, :x_coord, :y_coord
+
+    def initialize(x_coord, y_coord, color)
+      @x_coord = x_coord
+      @y_coord = y_coord 
       @color = color
     end
 
-    # Stone doesn't need to know how to serialize itself.
     def to_sgf
-      x = Game::LETTERS[@x]
-      y = Game::LETTERS[@y]
+      x = LETTERS[x_coord]
+      y = LETTERS[y_coord]
       ";#{color.to_s[0].upcase}[#{x}#{y}]"
     end
 
@@ -28,22 +30,18 @@ module RubyGo
       board.around(*to_coord).each do |intersection|
         next if intersection.empty?
 
-        intersection.group(board, stones) if intersection.color == @color
+        intersection.group(board, stones) if intersection.color == color
       end
 
       stones
     end
 
     def to_coord
-      [@x, @y]
-    end
-
-    def to_str
-      Board::COLORS[@color] 
+      [x_coord, y_coord]
     end
 
     def to_s
-      to_str
+      Board::COLORS[color] 
     end
 
     def ==(other)
@@ -56,13 +54,11 @@ module RubyGo
   # This can be changed to a Pass object
   class NullStone < Stone 
     def initialize(color = :empty)
-      @x, @y = nil, nil
+      @x_coord = nil
+      @y_coord = nil
       @color = color
     end
     
-    def remove_from_board(board)
-    end
-
     def to_sgf
       ";#{color.to_s[0].upcase}[]"
     end
