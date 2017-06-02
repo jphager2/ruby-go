@@ -11,11 +11,11 @@ module RubyGo
     def to_sgf
       x = Game::LETTERS[@x]
       y = Game::LETTERS[@y]
-      ";#{color.to_s[0].upcase}[#{x+y}]"
+      ";#{color.to_s[0].upcase}[#{x}#{y}]"
     end
 
     def empty?
-      @color == :empty
+      false
     end
 
     # The stone should not be responsible for placing itself on the board,
@@ -73,19 +73,7 @@ module RubyGo
     end
   end
 
-  # Good point made that separate classes for BlackStone and WhiteStone
-  # (etc) will potentially make the code harder to maintain.
-  #
-  class Liberty < Stone 
-    def initialize(x, y)
-      super(x, y, :empty)
-    end
-
-    def liberties(board)
-      [self]
-    end
-  end
-
+  # This can be changed to a Pass object
   class NullStone < Stone 
     def initialize(color = :empty)
       @x, @y = nil, nil

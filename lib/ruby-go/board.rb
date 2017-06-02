@@ -33,8 +33,8 @@ module RubyGo
       @board[y][x]
     end
 
-    def around(x, y = :y_not_given)
-      x, y = x.to_coord if x.kind_of?(Stone)
+    def around(intersection)
+      x, y = intersection.to_coord
       stones = [] 
       stones << at(x-1, y) unless x == 0 
       stones << at(x+1, y) unless x == (@board.length - 1) 
