@@ -3,41 +3,40 @@ module RubyGo
     Colors = {black: 'x', white: 'o', empty: '_'}
 
     # rename board to internal_board, and make it private
-    attr_accessor :board
+    attr_accessor :internal_board, :size
     def initialize(size)
-      @board = Array.new(size) { Array.new(size) { Liberty.new } }
+      @internal_board = Array.new(size) { Array.new(size) { Liberty.new } }
+      @size = size
     end
 
-    def size
-      @board.length
-    end
+    private :internal_board
 
     # use all?
     #
     def empty?
-      !@board.flatten.any? do |s| 
+      !internal_board.flatten.any? do |s| 
         !s.empty?
       end
     end
 
     def at(x, y)
-      @board[y][x]
+      internal_board[y][x]
     end
 
     def around(x, y)
       intersections = [] 
 
       intersections << at(x-1, y) unless x == 0 
-      intersections << at(x+1, y) unless x == (board.length - 1) 
+      intersections << at(x+1, y) unless x == (internal_board.length - 1) 
       intersections << at(x, y-1) unless y == 0 
-      intersections << at(x, y+1) unless y == (board.length - 1)
+      intersections << at(x, y+1) unless y == (internal_board.length - 1)
       intersections
     end
 
     def remove(stone)
       x, y = stone.to_coord
 
-      board[y][x] = Liberty.new
+      internal_board[y][x] = Liberty.new
     end
 
     # Board shouldn't care about game rules
@@ -51,7 +50,7 @@ module RubyGo
         )
       end
 
-      board[y][x] = stone
+      internal_board[y][x] = stone
     end
 
     def liberties(stone)
@@ -70,15 +69,15 @@ module RubyGo
 
     def to_str
       out = ""
-      if @board.length < 11
-        out << "\s\s\s#{(0..@board.length - 1).to_a.join(' ')}\n" 
+      if size < 11
+        out << "\s\s\s#{(0..size - 1).to_a.join(' ')}\n" 
       else
         out                                << 
           "\s\s\s#{(0..10).to_a.join(' ')}" <<
-          "#{(11..@board.length - 1).to_a.join('')}\n"
+          "#{(11..size - 1).to_a.join('')}\n"
       end
 
-      @board.each_with_index do |row, i|
+      internal_board.each_with_index do |row, i|
         i = "\s#{i}" if i < 10
         out << "#{i}\s#{(row.collect {|stn| stn.to_s}).join(' ')}\n"
       end
