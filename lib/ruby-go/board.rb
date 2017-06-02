@@ -35,20 +35,31 @@ module RubyGo
 
     def around(intersection)
       x, y = intersection.to_coord
-      stones = [] 
-      stones << at(x-1, y) unless x == 0 
-      stones << at(x+1, y) unless x == (@board.length - 1) 
-      stones << at(x, y-1) unless y == 0 
-      stones << at(x, y+1) unless y == (@board.length - 1)
-      stones
+      intersections = [] 
+
+      intersections << at(x-1, y) unless x == 0 
+      intersections << at(x+1, y) unless x == (board.length - 1) 
+      intersections << at(x, y-1) unless y == 0 
+      intersections << at(x, y+1) unless y == (board.length - 1)
+      intersections
     end
 
     def remove(stone)
       stone.remove_from_board(self)
     end
 
+    # Board shouldn't care about game rules
     def place(stone)
-      stone.place_on_board(self)
+      x, y = stone.to_coord
+
+      unless at(x, y).empty? 
+        raise(
+          Game::IllegalMove, 
+          "You cannot place a stone on top of another stone."  
+        )
+      end
+
+      board[y][x] = stone
     end
 
     def liberties(stone)

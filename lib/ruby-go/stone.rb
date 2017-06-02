@@ -18,17 +18,6 @@ module RubyGo
       false
     end
 
-    # The stone should not be responsible for placing itself on the board,
-    # or for raising exceptions for illegal state.
-    #
-    def place_on_board(board)
-      unless board.at(@x, @y).empty? 
-        raise Game::IllegalMove, 
-          "You cannot place a stone on top of another stone."  
-      end
-      board.board[@y][@x] = self
-    end
-
     # The stone should not be responsible for removing itself on the board
     #
     def remove_from_board(board)
