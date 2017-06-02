@@ -33,7 +33,7 @@ module RubyGo
     def test_game_can_place_a_stone
       game = Game.new(board: 9)
       game.black(2,2)
-      assert_equal BlackStone.new(2,2), game.board.at(2,2) 
+      assert_equal :black, game.board.at(2,2).color
     end
 
     def test_cannot_place_a_stone_on_top_of_another_stone
@@ -147,19 +147,19 @@ module RubyGo
 
     def test_can_play_in_previous_capture_area_that_is_not_a_ko
       game = big_capture_area_game
-      assert_equal Liberty.new(0,0), game.board.at(0,0) 
+      assert game.board.at(0,0).empty?
       game.black(0,0)
-      assert_equal BlackStone.new(0,0), game.board.at(0,0) 
+      assert_equal :black, game.board.at(0,0).color
 
       game = big_capture_area_game
-      assert_equal Liberty.new(0,1), game.board.at(0,1) 
+      assert game.board.at(0,1).empty?
       game.black(0,1)
-      assert_equal BlackStone.new(0,1), game.board.at(0,1) 
+      assert_equal :black, game.board.at(0,1).color
 
       game = big_capture_area_game
-      assert_equal Liberty.new(1,0), game.board.at(1,0) 
+      assert game.board.at(1,0).empty?
       game.black(1,0)
-      assert_equal BlackStone.new(1,0), game.board.at(1,0) 
+      assert_equal :black, game.board.at(1,0).color
     end
   end
 end

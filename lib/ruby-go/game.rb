@@ -43,11 +43,11 @@ module RubyGo
     end
 
     def black(x, y)
-      play(BlackStone.new(x,y))
+      play(Stone.new(x,y, :black))
     end
 
     def white(x, y)
-      play(WhiteStone.new(x,y))
+      play(Stone.new(x,y, :white))
     end
 
     def black_pass

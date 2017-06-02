@@ -2,9 +2,9 @@ module RubyGo
   class Stone
 
     attr_reader :color
-    def initialize(x, y)
+    def initialize(x, y, color)
       @x, @y = x, y
-      @color = :none
+      @color = color
     end
 
     # Stone doesn't need to know how to serialize itself.
@@ -78,26 +78,11 @@ module RubyGo
   #
   class Liberty < Stone 
     def initialize(x, y)
-      super
-      @color = :empty
+      super(x, y, :empty)
     end
 
     def liberties(board)
       [self]
-    end
-  end
-
-  class BlackStone < Stone
-    def initialize(x, y)
-      super
-      @color = :black
-    end
-  end
-
-  class WhiteStone < Stone
-    def initialize(x, y)
-      super
-      @color = :white
     end
   end
 
