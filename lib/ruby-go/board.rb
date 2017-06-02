@@ -1,6 +1,6 @@
 module RubyGo
   class Board
-    Colors = {black: 'x', white: 'o', empty: '_'}
+    COLORS = { black: 'x', white: 'o', empty: '_' }.freeze
 
     # rename board to internal_board, and make it private
     attr_accessor :internal_board, :size

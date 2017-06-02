@@ -39,7 +39,7 @@ module RubyGo
     end
 
     def to_str
-      Board::Colors[@color] 
+      Board::COLORS[@color] 
     end
 
     def to_s

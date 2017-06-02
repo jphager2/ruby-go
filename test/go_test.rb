@@ -4,8 +4,8 @@ require 'stringio'
 module RubyGo
   class GoTest < Minitest::Test 
     def setup
-      b,w = Board::Colors[:black], Board::Colors[:white] 
-      e   = Board::Colors[:empty]
+      b,w = Board::COLORS[:black], Board::COLORS[:white] 
+      e   = Board::COLORS[:empty]
 
       @row_9_str = "_ _ _ _ _ _ _ _ _\n" 
 
