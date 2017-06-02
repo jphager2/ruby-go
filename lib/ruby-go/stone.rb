@@ -21,25 +21,26 @@ module RubyGo
     # The stone should not be responsible for removing itself on the board
     #
     def remove_from_board(board)
-      board.board[@y][@x] = Liberty.new(*self.to_coord)
+      board.board[@y][@x] = Liberty.new
     end
 
     # The stone should not be responsible for knowing what is around it,
     #
     def liberties(board)
-      board.around(self).select {|stone| stone.empty?} 
+      board.around(*to_coord).select {|stone| stone.empty?} 
     end
 
     # The stone should not be responsible for knowing what is around it,
     #
     def group(board, stones = [])
-      return stones if stones.any? {|stone| stone.eql?(self)} 
+      return stones if stones.include?(self)
+
       stones << self
 
-      board.around(self).each do |stone|
-        if stone.color == @color
-          stone.group(board, stones)
-        end
+      board.around(*to_coord).each do |intersection|
+        next if intersection.empty?
+
+        intersection.group(board, stones) if intersection.color == @color
       end
 
       stones
@@ -58,7 +59,9 @@ module RubyGo
     end
 
     def ==(other)
-      (self.color == other.color) and (self.to_coord == other.to_coord)
+      other.is_a?(Stone) &&
+        (color == other.color) &&
+        (to_coord == other.to_coord)
     end
   end
 

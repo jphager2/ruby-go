@@ -61,7 +61,7 @@ module RubyGo
       game.white(2,3)
       game.white(1,2)
       game.white(3,2)
-      assert_equal Liberty.new(2,2), game.board.at(2,2) 
+      assert game.board.at(2,2).empty?
     end
 
     def test_capture_three_stones
@@ -85,7 +85,7 @@ module RubyGo
       game.black(2,2)
       game.white(2,3)
       game.undo
-      assert_equal Liberty.new(2,3), game.board.at(2,3)
+      assert game.board.at(2,3).empty?
     end
 
     def test_can_undo_until_beginning
@@ -94,7 +94,7 @@ module RubyGo
       game.white(3,2)
       game.black(3,3)
       3.times {game.undo}
-      assert_equal Liberty.new(2,2), game.board.at(2,2)
+      assert game.board.at(2,2).empty?
     end
 
     def test_can_pass

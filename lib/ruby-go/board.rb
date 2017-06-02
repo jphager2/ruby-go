@@ -5,16 +5,7 @@ module RubyGo
     # rename board to internal_board, and make it private
     attr_accessor :board
     def initialize(size)
-      @board = []
-      size -= 1
-
-      0.upto(size) do |y|
-        row = []
-        0.upto(size) do |x| 
-          row << Liberty.new(x, y) 
-        end
-        @board << row
-      end
+      @board = Array.new(size) { Array.new(size) { Liberty.new } }
     end
 
     def size
@@ -33,8 +24,7 @@ module RubyGo
       @board[y][x]
     end
 
-    def around(intersection)
-      x, y = intersection.to_coord
+    def around(x, y)
       intersections = [] 
 
       intersections << at(x-1, y) unless x == 0 

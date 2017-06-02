@@ -126,9 +126,9 @@ module RubyGo
 
     def capture
       stone = @moves.last[:stone]
-      stones_around = @board.around(stone)
+      stones_around = @board.around(*stone.to_coord).reject(&:empty?)
 
-      captures = stones_around.select {|stn| @board.liberties(stn) == 0}
+      captures = stones_around.select { |stn| @board.liberties(stn).zero? }
 
       captures.each {|stone| capture_group(stone)}
     end
