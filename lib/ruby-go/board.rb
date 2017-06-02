@@ -2,8 +2,8 @@ module RubyGo
   class Board
     COLORS = { black: 'x', white: 'o', empty: '_' }.freeze
 
-    # rename board to internal_board, and make it private
     attr_accessor :internal_board, :size
+
     def initialize(size)
       @internal_board = Array.new(size) { Array.new(size) { Liberty.new } }
       @size = size
@@ -11,12 +11,8 @@ module RubyGo
 
     private :internal_board
 
-    # use all?
-    #
     def empty?
-      !internal_board.flatten.any? do |s| 
-        !s.empty?
-      end
+      internal_board.flatten.all?(&:empty?)
     end
 
     def at(x, y)
@@ -67,7 +63,7 @@ module RubyGo
       stone.group(self)
     end
 
-    def to_str
+    def to_s
       out = ""
       if size < 11
         out << "\s\s\s#{(0..size - 1).to_a.join(' ')}\n" 
@@ -83,10 +79,6 @@ module RubyGo
       end
 
       out
-    end
-
-    def to_s 
-      to_str
     end
   end
 end
