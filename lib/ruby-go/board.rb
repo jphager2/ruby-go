@@ -78,9 +78,8 @@ module RubyGo
       if size < 11
         out << "\s\s\s#{(0..size - 1).to_a.join(' ')}\n" 
       else
-        out                                << 
-          "\s\s\s#{(0..10).to_a.join(' ')}" <<
-          "#{(11..size - 1).to_a.join('')}\n"
+        out << "\s\s\s#{(0..10).to_a.join(' ')}" 
+        out << "#{(11..size - 1).to_a.join('')}\n"
       end
 
       internal_board.each_with_index do |row, i|
