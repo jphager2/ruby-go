@@ -99,11 +99,9 @@ module RubyGo
 
     def test_can_pass
       game = Game.new
-      game.pass(:black)
-      game.pass(:white)
       game.black_pass
       game.white_pass
-      assert_equal 4, game.passes
+      assert_equal 2, game.passes
     end
 
     def test_cannot_play_a_suicide

@@ -1,11 +1,14 @@
 module RubyGo
   class Game 
-    attr_reader :board, :moves
+    attr_reader :board, :moves, :capture_count
 
     def initialize(board: 19)
       @board = Board.new(board)
       @moves = []
+      @capture_count = { black: 0, white: 0 }
     end
+
+    private :capture_count, :moves
 
     def save(name="my_go_game")
       tree = SGF::Parser.new.parse(to_sgf)
@@ -46,17 +49,13 @@ module RubyGo
       pass(:white)
     end
 
-    # This should be a private method OR change public api to use #play and 
-    # #pass only (instead of #black, #white, #black_pass, #white_pass.
-    #
-    def pass(color)
-      moves << {stone: NullStone.new(color), captures: [], pass: true} 
-    end
-
     def undo 
       move = moves.pop
       board.remove(move[:stone])
-      move[:captures].each {|stone| board.place(stone)}
+      move[:captures].each do |stone| 
+        board.place(stone)
+        capture_count[stone.color] -= 1
+      end
     end
 
     # Passes do not need to be counted every time. Pass count can be stored
@@ -79,24 +78,31 @@ module RubyGo
 
     private
 
+    def pass(color)
+      moves << {stone: NullStone.new(color), captures: [], pass: true} 
+    end
+
     def play(stone)
+      check_illegal_placement!(stone)
+
+      board.place(stone)
+      moves << { stone: stone, captures: [], pass: false }
+      record_captures!
+
+      check_illegal_suicide!
+      check_illegal_ko!
+    end
+
+    def check_illegal_placement!(stone)
       unless board.at(*stone.to_coord).empty? 
         raise(
           Game::IllegalMove, 
           "You cannot place a stone on top of another stone."  
         )
       end
-
-      board.place(stone)
-      moves << {stone: stone, captures: [], pass: false}
-
-      capture; suicide; ko
     end
 
-    # The name of the method does not tell me what it does. #check_ko_rule
-    # or something similar would be better
-    #
-    def ko 
+    def check_illegal_ko!
       return if moves.length < 2 or !moves[-2][:captures] 
 
       captures = moves[-2][:captures]
@@ -109,9 +115,7 @@ module RubyGo
       end
     end
 
-    # Same as comment above. #check_suicide_rule would be better.
-    #
-    def suicide
+    def check_illegal_suicide!
       stone = moves.last[:stone]
       if board.liberties(stone).zero?
         undo
@@ -119,13 +123,13 @@ module RubyGo
       end
     end
 
-    def capture
+    def record_captures!
       stone = moves.last[:stone]
       stones_around = board.around(*stone.to_coord).reject(&:empty?)
 
       captures = stones_around.select { |stn| board.liberties(stn).zero? }
 
-      captures.each {|stone| capture_group(stone)}
+      captures.each { |stone| capture_group(stone) }
     end
 
     # This name is confusing. #capture_stones or #remove_captured_stones
@@ -136,13 +140,10 @@ module RubyGo
     def capture_stone(stone)
       moves.last[:captures] << stone 
       board.remove(stone)
+      capture_count[stone.color] += 1
     end
 
-    public
-
-    # This can inherit from StandardError
-    #
-    class IllegalMove < Exception
+    class IllegalMove < StandardError
     end
   end
 end
