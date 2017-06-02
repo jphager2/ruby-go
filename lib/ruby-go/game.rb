@@ -1,6 +1,6 @@
 module RubyGo
   class Game 
-    attr_reader :board
+    attr_reader :board, :moves
 
     def initialize(board: 19)
       @board = Board.new(board)
@@ -22,8 +22,6 @@ module RubyGo
       sgf << ')'
     end
 
-    # Access @board through the getter method
-    #
     def view 
       puts  board.to_s
       puts  "   " + "_"*(board.size * 2)

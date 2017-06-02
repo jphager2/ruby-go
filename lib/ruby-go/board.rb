@@ -59,8 +59,18 @@ module RubyGo
       libs.uniq.length
     end
 
-    def group_of(stone)
-      stone.group(self)
+    def group_of(stone, stones = [])
+      return stones if stones.include?(stone)
+
+      stones << stone
+
+      around(*stone.to_coord).each do |intersection|
+        next if intersection.empty?
+
+        group_of(intersection, stones) if intersection.color == stone.color
+      end
+
+      stones
     end
 
     def to_s

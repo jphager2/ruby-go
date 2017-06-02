@@ -20,22 +20,6 @@ module RubyGo
       false
     end
 
-    # The stone should not be responsible for knowing what is around it,
-    #
-    def group(board, stones = [])
-      return stones if stones.include?(self)
-
-      stones << self
-
-      board.around(*to_coord).each do |intersection|
-        next if intersection.empty?
-
-        intersection.group(board, stones) if intersection.color == color
-      end
-
-      stones
-    end
-
     def to_coord
       [x_coord, y_coord]
     end
