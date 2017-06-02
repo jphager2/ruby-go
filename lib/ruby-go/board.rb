@@ -35,7 +35,9 @@ module RubyGo
     end
 
     def remove(stone)
-      stone.remove_from_board(self)
+      x, y = stone.to_coord
+
+      board[y][x] = Liberty.new
     end
 
     # Board shouldn't care about game rules
@@ -53,9 +55,13 @@ module RubyGo
     end
 
     def liberties(stone)
-      group_of(stone).inject(0) do |libs, stn|
-        libs + stn.liberties(self).count
+      libs = []
+
+      group_of(stone).each do |stn|
+        libs += around(*stn.to_coord).select(&:empty?)
       end
+
+      libs.uniq.length
     end
 
     def group_of(stone)

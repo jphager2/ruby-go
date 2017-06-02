@@ -118,7 +118,7 @@ module RubyGo
     #
     def suicide
       stone = @moves.last[:stone]
-      unless @board.liberties(stone) > 0
+      if @board.liberties(stone).zero?
         undo
         raise IllegalMove, "You cannot play a suicide."
       end

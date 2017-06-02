@@ -18,18 +18,6 @@ module RubyGo
       false
     end
 
-    # The stone should not be responsible for removing itself on the board
-    #
-    def remove_from_board(board)
-      board.board[@y][@x] = Liberty.new
-    end
-
-    # The stone should not be responsible for knowing what is around it,
-    #
-    def liberties(board)
-      board.around(*to_coord).select {|stone| stone.empty?} 
-    end
-
     # The stone should not be responsible for knowing what is around it,
     #
     def group(board, stones = [])
