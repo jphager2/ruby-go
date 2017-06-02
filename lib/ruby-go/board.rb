@@ -39,13 +39,6 @@ module RubyGo
     def place(stone)
       x, y = stone.to_coord
 
-      unless at(x, y).empty? 
-        raise(
-          Game::IllegalMove, 
-          "You cannot place a stone on top of another stone."  
-        )
-      end
-
       internal_board[y][x] = stone
     end
 

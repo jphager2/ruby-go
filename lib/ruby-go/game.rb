@@ -80,6 +80,13 @@ module RubyGo
     private
 
     def play(stone)
+      unless board.at(*stone.to_coord).empty? 
+        raise(
+          Game::IllegalMove, 
+          "You cannot place a stone on top of another stone."  
+        )
+      end
+
       board.place(stone)
       moves << {stone: stone, captures: [], pass: false}
 
