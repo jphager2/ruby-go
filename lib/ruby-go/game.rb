@@ -25,7 +25,7 @@ module RubyGo
     end
 
     def view 
-      puts  board.to_s
+      puts  board
       puts  "   " + "_"*(board.size * 2)
       print "   Prisoners || White: #{captures[:black]} |"
       puts  " Black: #{captures[:white]}"
