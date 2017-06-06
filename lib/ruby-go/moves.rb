@@ -37,6 +37,8 @@ module RubyGo
         capture_count[stone.color] -= 1
       end
 
+      @pass_count -= 1 if move.empty?
+
       move
     end
 
@@ -52,6 +54,10 @@ module RubyGo
     def initialize(played)
       @played = played
       @captures = []
+    end
+
+    def empty?
+      played.empty?
     end
   end
 end

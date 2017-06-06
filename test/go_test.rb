@@ -88,6 +88,14 @@ module RubyGo
       assert game.board.at(2,3).empty?
     end
 
+    def test_can_undo_pass
+      game = Game.new
+      game.black(2,2)
+      game.white_pass
+      game.undo
+      assert_equal 0, game.passes
+    end
+
     def test_can_undo_until_beginning
       game = Game.new()
       game.black(2,2)

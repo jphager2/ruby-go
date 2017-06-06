@@ -30,6 +30,8 @@ module RubyGo
     end
 
     def remove(stone)
+      return if stone.empty?
+
       x, y = stone.to_coord
 
       internal_board[y][x] = Liberty.new

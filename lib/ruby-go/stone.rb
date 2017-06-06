@@ -46,5 +46,9 @@ module RubyGo
     def to_sgf
       ";#{color.to_s[0].upcase}[]"
     end
+    
+    def empty?
+      true
+    end
   end
 end
