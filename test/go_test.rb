@@ -80,6 +80,28 @@ module RubyGo
       assert_equal 3, game.captures[:black]
     end
 
+    def test_snack_back
+      game = Game.new(board: 9)
+      game.black(3,2)
+      game.black(2,3)
+      game.black(4,3)
+      game.black(2,4)
+      game.black(5,4)
+      game.black(3,5)
+      game.black(4,5)
+      game.white(4,2)
+      game.white(5,3)
+      game.white(3,4)
+      game.white(4,4)
+      game.white(2,0)
+      game.white(3,3)
+      assert_equal 1, game.captures[:black]
+      assert_equal 0, game.captures[:white]
+      game.black(4,3)
+      assert_equal 1, game.captures[:black]
+      assert_equal 3, game.captures[:white]
+    end
+
     def test_can_undo
       game = Game.new()
       game.black(2,2)

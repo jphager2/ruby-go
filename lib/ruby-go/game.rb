@@ -83,9 +83,9 @@ module RubyGo
       return if @moves.length < 2 or !@moves[-2][:captures]
 
       captures = @moves[-2][:captures]
-      stone = @moves.last[:stone]
+      last = @moves.last
 
-      if captures == [stone]
+      if captures == [last[:stone]] && last[:captures].size == 1
         undo
         raise IllegalMove,
           "You cannot capture the ko, play a ko threat first"
@@ -104,13 +104,12 @@ module RubyGo
       stone = @moves.last[:stone]
       stones_around = @board.around(stone)
 
-      captures = stones_around.select {|stn| @board.liberties(stn) == 0}
+      captures = stones_around.
+                   reject {|stn| stn.color == stone.color}.
+                   select {|stn| @board.liberties(stn) == 0}
 
-      captures.each {|stone| capture_group(stone)}
-    end
-
-    def capture_group(stone)
-      @board.group_of(stone).each {|stone| capture_stone(stone)}
+      captures.map {|stone| @board.group_of(stone)}.
+        flatten.uniq.each {|stone| capture_stone(stone)}
     end
 
     def capture_stone(stone)
