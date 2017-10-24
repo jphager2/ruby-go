@@ -14,8 +14,8 @@ Gem::Specification.new do |s|
   s.description = 'A gem to play go and save games as sgf'
   s.authors     = ['jphager2']
   s.email       = 'jphager2@gmail.com'
-  s.files       = files 
+  s.files       = files
   s.executables << 'ruby-go.rb'
   s.license     = 'MIT'
-  s.add_runtime_dependency "SgfParser", "~> 2.0.0"
+  s.add_runtime_dependency 'SgfParser', '~> 3.0.0'
 end
