@@ -5,3 +5,5 @@
 *.gem
 
 my_go_game.sgf
+
+.ruby-*

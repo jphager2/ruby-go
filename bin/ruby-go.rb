@@ -2,7 +2,7 @@
 
 require_relative '../lib/ruby-go'
 
-game = Game.new
+game = RubyGo::Game.new
 
 def game.prompt_for_turn
   print "Pass or enter coordinates x, y for move (e.g. 4, 4): "
@@ -37,7 +37,7 @@ until game.passes >= 2
     game.view
 
     turn += 1
-  rescue Game::IllegalMove
+  rescue RubyGo::Game::IllegalMove
     next
   end
 end

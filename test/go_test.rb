@@ -4,8 +4,8 @@ require 'stringio'
 module RubyGo
   class GoTest < Minitest::Test 
     def setup
-      b,w = Board::Colors[:black], Board::Colors[:white] 
-      e   = Board::Colors[:empty]
+      b,w = Board::COLORS[:black], Board::COLORS[:white] 
+      e   = Board::COLORS[:empty]
 
       @row_9_str = "_ _ _ _ _ _ _ _ _\n" 
 
@@ -33,7 +33,7 @@ module RubyGo
     def test_game_can_place_a_stone
       game = Game.new(board: 9)
       game.black(2,2)
-      assert_equal BlackStone.new(2,2), game.board.at(2,2) 
+      assert_equal :black, game.board.at(2,2).color
     end
 
     def test_cannot_place_a_stone_on_top_of_another_stone
@@ -61,7 +61,7 @@ module RubyGo
       game.white(2,3)
       game.white(1,2)
       game.white(3,2)
-      assert_equal Liberty.new(2,2), game.board.at(2,2) 
+      assert game.board.at(2,2).empty?
     end
 
     def test_capture_three_stones
@@ -85,7 +85,15 @@ module RubyGo
       game.black(2,2)
       game.white(2,3)
       game.undo
-      assert_equal Liberty.new(2,3), game.board.at(2,3)
+      assert game.board.at(2,3).empty?
+    end
+
+    def test_can_undo_pass
+      game = Game.new
+      game.black(2,2)
+      game.white_pass
+      game.undo
+      assert_equal 0, game.passes
     end
 
     def test_can_undo_until_beginning
@@ -94,16 +102,14 @@ module RubyGo
       game.white(3,2)
       game.black(3,3)
       3.times {game.undo}
-      assert_equal Liberty.new(2,2), game.board.at(2,2)
+      assert game.board.at(2,2).empty?
     end
 
     def test_can_pass
       game = Game.new
-      game.pass(:black)
-      game.pass(:white)
       game.black_pass
       game.white_pass
-      assert_equal 4, game.passes
+      assert_equal 2, game.passes
     end
 
     def test_cannot_play_a_suicide
@@ -147,19 +153,19 @@ module RubyGo
 
     def test_can_play_in_previous_capture_area_that_is_not_a_ko
       game = big_capture_area_game
-      assert_equal Liberty.new(0,0), game.board.at(0,0) 
+      assert game.board.at(0,0).empty?
       game.black(0,0)
-      assert_equal BlackStone.new(0,0), game.board.at(0,0) 
+      assert_equal :black, game.board.at(0,0).color
 
       game = big_capture_area_game
-      assert_equal Liberty.new(0,1), game.board.at(0,1) 
+      assert game.board.at(0,1).empty?
       game.black(0,1)
-      assert_equal BlackStone.new(0,1), game.board.at(0,1) 
+      assert_equal :black, game.board.at(0,1).color
 
       game = big_capture_area_game
-      assert_equal Liberty.new(1,0), game.board.at(1,0) 
+      assert game.board.at(1,0).empty?
       game.black(1,0)
-      assert_equal BlackStone.new(1,0), game.board.at(1,0) 
+      assert_equal :black, game.board.at(1,0).color
     end
   end
 end
