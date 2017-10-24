@@ -1,5 +1,5 @@
 module RubyGo
-  class Game 
+  class Game
 
     LETTERS = ('a'..'z').to_a
 
@@ -24,7 +24,7 @@ module RubyGo
       sgf << ')'
     end
 
-    def view 
+    def view
       puts  @board.to_s
       puts  "   " + "_"*(@board.size * 2)
       print "   Prisoners || White: #{captures[:black]} |"
@@ -49,10 +49,10 @@ module RubyGo
     end
 
     def pass(color)
-      @moves << {stone: NullStone.new(color), captures: [], pass: true} 
+      @moves << {stone: NullStone.new(color), captures: [], pass: true}
     end
 
-    def undo 
+    def undo
       move = @moves.pop
       @board.remove(move[:stone])
       move[:captures].each {|stone| @board.place(stone)}
@@ -60,7 +60,7 @@ module RubyGo
 
     def passes
       @moves.inject(0) {|total, move| move[:pass] ? total + 1 : 0}
-    end 
+    end
 
     def captures
       @moves.each_with_object({black: 0, white: 0}) do |move, total|
@@ -68,7 +68,7 @@ module RubyGo
           total[capture.color] += 1
         end
       end
-    end 
+    end
 
     private
 
@@ -79,15 +79,15 @@ module RubyGo
       capture; suicide; ko
     end
 
-    def ko 
-      return if @moves.length < 2 or !@moves[-2][:captures] 
+    def ko
+      return if @moves.length < 2 or !@moves[-2][:captures]
 
       captures = @moves[-2][:captures]
       stone = @moves.last[:stone]
 
       if captures == [stone]
         undo
-        raise IllegalMove, 
+        raise IllegalMove,
           "You cannot capture the ko, play a ko threat first"
       end
     end
@@ -114,7 +114,7 @@ module RubyGo
     end
 
     def capture_stone(stone)
-      @moves.last[:captures] << stone 
+      @moves.last[:captures] << stone
       @board.remove(stone)
     end
 

@@ -9,8 +9,8 @@ module RubyGo
 
       0.upto(size) do |y|
         row = []
-        0.upto(size) do |x| 
-          row << Liberty.new(x, y) 
+        0.upto(size) do |x|
+          row << Liberty.new(x, y)
         end
         @board << row
       end
@@ -21,7 +21,7 @@ module RubyGo
     end
 
     def empty?
-      !@board.flatten.any? do |s| 
+      !@board.flatten.any? do |s|
         !s.empty?
       end
     end
@@ -32,10 +32,10 @@ module RubyGo
 
     def around(x, y = :y_not_given)
       x, y = x.to_coord if x.kind_of?(Stone)
-      stones = [] 
-      stones << at(x-1, y) unless x == 0 
-      stones << at(x+1, y) unless x == (@board.length - 1) 
-      stones << at(x, y-1) unless y == 0 
+      stones = []
+      stones << at(x-1, y) unless x == 0
+      stones << at(x+1, y) unless x == (@board.length - 1)
+      stones << at(x, y-1) unless y == 0
       stones << at(x, y+1) unless y == (@board.length - 1)
       stones
     end
@@ -61,9 +61,9 @@ module RubyGo
     def to_str
       out = ""
       if @board.length < 11
-        out << "\s\s\s#{(0..@board.length - 1).to_a.join(' ')}\n" 
+        out << "\s\s\s#{(0..@board.length - 1).to_a.join(' ')}\n"
       else
-        out                                << 
+        out                                <<
           "\s\s\s#{(0..10).to_a.join(' ')}" <<
           "#{(11..@board.length - 1).to_a.join('')}\n"
       end
@@ -76,7 +76,7 @@ module RubyGo
       out
     end
 
-    def to_s 
+    def to_s
       to_str
     end
   end

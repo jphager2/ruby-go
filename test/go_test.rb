@@ -2,12 +2,12 @@ require_relative 'test_helper'
 require 'stringio'
 
 module RubyGo
-  class GoTest < Minitest::Test 
+  class GoTest < Minitest::Test
     def setup
-      b,w = Board::Colors[:black], Board::Colors[:white] 
+      b,w = Board::Colors[:black], Board::Colors[:white]
       e   = Board::Colors[:empty]
 
-      @row_9_str = "_ _ _ _ _ _ _ _ _\n" 
+      @row_9_str = "_ _ _ _ _ _ _ _ _\n"
 
       @game = Game.new(board: 9)
     end
@@ -17,7 +17,7 @@ module RubyGo
     end
 
     def test_empty_board_looks_like_empty_board
-      assert_includes @game.board.to_s, @row_9_str 
+      assert_includes @game.board.to_s, @row_9_str
     end
 
     def test_game_can_print_the_board
@@ -33,7 +33,7 @@ module RubyGo
     def test_game_can_place_a_stone
       game = Game.new(board: 9)
       game.black(2,2)
-      assert_equal BlackStone.new(2,2), game.board.at(2,2) 
+      assert_equal BlackStone.new(2,2), game.board.at(2,2)
     end
 
     def test_cannot_place_a_stone_on_top_of_another_stone
@@ -61,7 +61,7 @@ module RubyGo
       game.white(2,3)
       game.white(1,2)
       game.white(3,2)
-      assert_equal Liberty.new(2,2), game.board.at(2,2) 
+      assert_equal Liberty.new(2,2), game.board.at(2,2)
     end
 
     def test_capture_three_stones
@@ -147,19 +147,19 @@ module RubyGo
 
     def test_can_play_in_previous_capture_area_that_is_not_a_ko
       game = big_capture_area_game
-      assert_equal Liberty.new(0,0), game.board.at(0,0) 
+      assert_equal Liberty.new(0,0), game.board.at(0,0)
       game.black(0,0)
-      assert_equal BlackStone.new(0,0), game.board.at(0,0) 
+      assert_equal BlackStone.new(0,0), game.board.at(0,0)
 
       game = big_capture_area_game
-      assert_equal Liberty.new(0,1), game.board.at(0,1) 
+      assert_equal Liberty.new(0,1), game.board.at(0,1)
       game.black(0,1)
-      assert_equal BlackStone.new(0,1), game.board.at(0,1) 
+      assert_equal BlackStone.new(0,1), game.board.at(0,1)
 
       game = big_capture_area_game
-      assert_equal Liberty.new(1,0), game.board.at(1,0) 
+      assert_equal Liberty.new(1,0), game.board.at(1,0)
       game.black(1,0)
-      assert_equal BlackStone.new(1,0), game.board.at(1,0) 
+      assert_equal BlackStone.new(1,0), game.board.at(1,0)
     end
   end
 end

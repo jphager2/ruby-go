@@ -18,9 +18,9 @@ module RubyGo
     end
 
     def place_on_board(board)
-      unless board.at(@x, @y).empty? 
-        raise Game::IllegalMove, 
-          "You cannot place a stone on top of another stone."  
+      unless board.at(@x, @y).empty?
+        raise Game::IllegalMove,
+          "You cannot place a stone on top of another stone."
       end
       board.board[@y][@x] = self
     end
@@ -30,11 +30,11 @@ module RubyGo
     end
 
     def liberties(board)
-      board.around(self).select {|stone| stone.empty?} 
+      board.around(self).select {|stone| stone.empty?}
     end
 
     def group(board, stones = [])
-      return stones if stones.any? {|stone| stone.eql?(self)} 
+      return stones if stones.any? {|stone| stone.eql?(self)}
       stones << self
 
       board.around(self).each do |stone|
@@ -51,7 +51,7 @@ module RubyGo
     end
 
     def to_str
-      Board::Colors[@color] 
+      Board::Colors[@color]
     end
 
     def to_s
@@ -63,7 +63,7 @@ module RubyGo
     end
   end
 
-  class Liberty < Stone 
+  class Liberty < Stone
     def initialize(x, y)
       super
       @color = :empty
@@ -88,12 +88,12 @@ module RubyGo
     end
   end
 
-  class NullStone < Stone 
+  class NullStone < Stone
     def initialize(color = :empty)
       @x, @y = nil, nil
       @color = color
     end
-    
+
     def remove_from_board(board)
     end
 
