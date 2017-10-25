@@ -93,7 +93,6 @@ module RubyGo
       game.white(5,3)
       game.white(3,4)
       game.white(4,4)
-      game.white(2,0)
       game.white(3,3)
       assert_equal 1, game.captures[:black]
       assert_equal 0, game.captures[:white]
