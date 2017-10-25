@@ -104,12 +104,12 @@ module RubyGo
       stone = @moves.last[:stone]
       stones_around = @board.around(stone)
 
-      captures = stones_around.
-                   reject {|stn| stn.color == stone.color}.
-                   select {|stn| @board.liberties(stn) == 0}
+      captures = stones_around
+                   .reject {|stn| stn.color == stone.color}
+                   .select {|stn| @board.liberties(stn) == 0}
 
-      captures.map {|stone| @board.group_of(stone)}.
-        flatten.uniq.each {|stone| capture_stone(stone)}
+      captures.map {|stone| @board.group_of(stone)}
+        .flatten.uniq.each {|stone| capture_stone(stone)}
     end
 
     def capture_stone(stone)
