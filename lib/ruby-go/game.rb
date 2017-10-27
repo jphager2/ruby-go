@@ -1,13 +1,13 @@
 module RubyGo
   class Game
+    attr_reader :board, :moves
 
-    LETTERS = ('a'..'z').to_a
-
-    attr_reader :board
     def initialize(board: 19)
       @board = Board.new(board)
-      @moves = []
+      @moves = Moves.new
     end
+
+    private :moves
 
     def save(name="my_go_game")
       tree = SGF::Parser.new.parse(to_sgf)
@@ -17,27 +17,27 @@ module RubyGo
     def to_sgf
       sgf = "(;GM[1]FF[4]CA[UTF-8]AP[jphager2]SZ[#{board.size}]PW[White]PB[Black]"
 
-      @moves.each do |move|
-        sgf << move[:stone].to_sgf
+      moves.each do |move|
+        sgf << move.played.to_sgf
       end
 
       sgf << ')'
     end
 
-    def view
-      puts  @board.to_s
-      puts  "   " + "_"*(@board.size * 2)
+    def view 
+      puts  board
+      puts  "   " + "_"*(board.size * 2)
       print "   Prisoners || White: #{captures[:black]} |"
       puts  " Black: #{captures[:white]}"
-      puts  "   " + "-"*(@board.size * 2)
+      puts  "   " + "-"*(board.size * 2)
     end
 
     def black(x, y)
-      play(BlackStone.new(x,y))
+      play(Stone.new(x, y, :black))
     end
 
     def white(x, y)
-      play(WhiteStone.new(x,y))
+      play(Stone.new(x, y, :white))
     end
 
     def black_pass
@@ -48,78 +48,85 @@ module RubyGo
       pass(:white)
     end
 
-    def pass(color)
-      @moves << {stone: NullStone.new(color), captures: [], pass: true}
-    end
-
     def undo
-      move = @moves.pop
-      @board.remove(move[:stone])
-      move[:captures].each {|stone| @board.place(stone)}
+      move = moves.pop
+
+      board.remove(move.played)
+      move.captures.each do |stone|
+        board.place(stone)
+      end
     end
 
     def passes
-      @moves.inject(0) {|total, move| move[:pass] ? total + 1 : 0}
+      moves.pass_count
     end
 
     def captures
-      @moves.each_with_object({black: 0, white: 0}) do |move, total|
-        move[:captures].each do |capture|
-          total[capture.color] += 1
-        end
-      end
+      moves.capture_count
     end
 
     private
 
-    def play(stone)
-      @board.place(stone)
-      @moves << {stone: stone, captures: [], pass: false}
-
-      capture; suicide; ko
+    def pass(color)
+      moves.pass(NullStone.new(color))
     end
 
-    def ko
-      return if @moves.length < 2 or !@moves[-2][:captures]
+    def play(stone)
+      check_illegal_placement!(stone)
 
-      captures = @moves[-2][:captures]
-      last = @moves.last
+      board.place(stone)
+      moves.play(stone)
+      record_captures!(stone)
 
-      if captures == [last[:stone]] && last[:captures].size == 1
+      check_illegal_suicide!(stone)
+      check_illegal_ko!(stone)
+    end
+
+    def check_illegal_placement!(stone)
+      unless board.at(*stone.to_coord).empty? 
+        raise(
+          Game::IllegalMove, 
+          "You cannot place a stone on top of another stone."  
+        )
+      end
+    end
+
+    def check_illegal_ko!(stone)
+      last_move = moves.prev
+
+      return unless last_move
+
+      if last_move.captures == [stone]
         undo
         raise IllegalMove,
           "You cannot capture the ko, play a ko threat first"
       end
     end
 
-    def suicide
-      stone = @moves.last[:stone]
-      unless @board.liberties(stone) > 0
+    def check_illegal_suicide!(stone)
+      if board.liberties(stone).zero?
         undo
         raise IllegalMove, "You cannot play a suicide."
       end
     end
 
-    def capture
-      stone = @moves.last[:stone]
-      stones_around = @board.around(stone)
+    def record_captures!(stone)
+      stones_around = board.around(*stone.to_coord).reject(&:empty?)
 
       captures = stones_around
-                   .reject {|stn| stn.color == stone.color}
-                   .select {|stn| @board.liberties(stn) == 0}
+                   .reject {| stn| stn.color == stone.color }
+                   .select { |stn| @board.liberties(stn).zero? }
 
       captures.map {|stone| @board.group_of(stone)}
         .flatten.uniq.each {|stone| capture_stone(stone)}
     end
 
     def capture_stone(stone)
-      @moves.last[:captures] << stone
-      @board.remove(stone)
+      moves.capture(stone)
+      board.remove(stone)
     end
 
-    public
-
-    class IllegalMove < Exception
+    class IllegalMove < StandardError
     end
   end
 end
