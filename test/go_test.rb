@@ -80,7 +80,7 @@ module RubyGo
       assert_equal 3, game.captures[:black]
     end
 
-    def test_snack_back
+    def test_snap_back
       game = Game.new(board: 9)
       game.black(3,2)
       game.black(2,3)

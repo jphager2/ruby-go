@@ -96,7 +96,7 @@ module RubyGo
 
       return unless last_move
 
-      if last_move.captures == [stone]
+      if last_move.captures == [stone] && moves.current.captures.one?
         undo
         raise IllegalMove,
           "You cannot capture the ko, play a ko threat first"
