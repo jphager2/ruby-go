@@ -20,11 +20,11 @@ module RubyGo
     end
 
     def around(x, y)
-      intersections = [] 
+      intersections = []
 
-      intersections << at(x-1, y) unless x == 0 
-      intersections << at(x+1, y) unless x == (internal_board.length - 1) 
-      intersections << at(x, y-1) unless y == 0 
+      intersections << at(x-1, y) unless x == 0
+      intersections << at(x+1, y) unless x == (internal_board.length - 1)
+      intersections << at(x, y-1) unless y == 0
       intersections << at(x, y+1) unless y == (internal_board.length - 1)
       intersections
     end
@@ -70,6 +70,7 @@ module RubyGo
 
     def to_s
       out = ""
+      
       if size < 11
         out << "\s\s\s#{(0..size - 1).to_a.join(' ')}\n" 
       else

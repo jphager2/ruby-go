@@ -2,12 +2,12 @@ require_relative 'test_helper'
 require 'stringio'
 
 module RubyGo
-  class GoTest < Minitest::Test 
+  class GoTest < Minitest::Test
     def setup
-      b,w = Board::COLORS[:black], Board::COLORS[:white] 
+      b,w = Board::COLORS[:black], Board::COLORS[:white]
       e   = Board::COLORS[:empty]
 
-      @row_9_str = "_ _ _ _ _ _ _ _ _\n" 
+      @row_9_str = "_ _ _ _ _ _ _ _ _\n"
 
       @game = Game.new(board: 9)
     end
@@ -17,7 +17,7 @@ module RubyGo
     end
 
     def test_empty_board_looks_like_empty_board
-      assert_includes @game.board.to_s, @row_9_str 
+      assert_includes @game.board.to_s, @row_9_str
     end
 
     def test_game_can_print_the_board
@@ -78,6 +78,27 @@ module RubyGo
       game.white(3,2)
       game.white(3,3)
       assert_equal 3, game.captures[:black]
+    end
+
+    def test_snack_back
+      game = Game.new(board: 9)
+      game.black(3,2)
+      game.black(2,3)
+      game.black(4,3)
+      game.black(2,4)
+      game.black(5,4)
+      game.black(3,5)
+      game.black(4,5)
+      game.white(4,2)
+      game.white(5,3)
+      game.white(3,4)
+      game.white(4,4)
+      game.white(3,3)
+      assert_equal 1, game.captures[:black]
+      assert_equal 0, game.captures[:white]
+      game.black(4,3)
+      assert_equal 1, game.captures[:black]
+      assert_equal 3, game.captures[:white]
     end
 
     def test_can_undo

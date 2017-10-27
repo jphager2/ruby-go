@@ -42,7 +42,7 @@ module RubyGo
       @y_coord = nil
       @color = color
     end
-    
+
     def to_sgf
       ";#{color.to_s[0].upcase}[]"
     end

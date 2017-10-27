@@ -1,10 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    SgfParser (2.0.0)
+    SgfParser (3.0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  SgfParser (~> 2.0.0)
+  SgfParser (~> 3.0.0)
+
+BUNDLED WITH
+   1.15.4

@@ -46,7 +46,7 @@ module RubyGo
       game.black(16,2)
       game.white(15,2)
       game.save
-      assert_includes Dir.glob(path), file 
+      assert_includes Dir.glob(path), file
     end
   end
 end

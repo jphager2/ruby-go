@@ -1,5 +1,5 @@
 module RubyGo
-  class Game 
+  class Game
     attr_reader :board, :moves
 
     def initialize(board: 19)
@@ -48,27 +48,27 @@ module RubyGo
       pass(:white)
     end
 
-    def undo 
+    def undo
       move = moves.pop
 
       board.remove(move.played)
-      move.captures.each do |stone| 
+      move.captures.each do |stone|
         board.place(stone)
       end
     end
 
     def passes
       moves.pass_count
-    end 
+    end
 
     def captures
       moves.capture_count
-    end 
+    end
 
     private
 
     def pass(color)
-      moves.pass(NullStone.new(color)) 
+      moves.pass(NullStone.new(color))
     end
 
     def play(stone)
@@ -98,7 +98,7 @@ module RubyGo
 
       if last_move.captures == [stone]
         undo
-        raise IllegalMove, 
+        raise IllegalMove,
           "You cannot capture the ko, play a ko threat first"
       end
     end
@@ -113,13 +113,12 @@ module RubyGo
     def record_captures!(stone)
       stones_around = board.around(*stone.to_coord).reject(&:empty?)
 
-      captures = stones_around.select { |stn| board.liberties(stn).zero? }
+      captures = stones_around
+                   .reject {| stn| stn.color == stone.color }
+                   .select { |stn| @board.liberties(stn).zero? }
 
-      captures.each { |stone| capture_grouped_stones(stone) }
-    end
-
-    def capture_grouped_stones(stone)
-      board.group_of(stone).each {|stone| capture_stone(stone)}
+      captures.map {|stone| @board.group_of(stone)}
+        .flatten.uniq.each {|stone| capture_stone(stone)}
     end
 
     def capture_stone(stone)
