@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    ruby-go (1.0.0)
+      SgfParser (~> 3.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -7,7 +13,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  SgfParser (~> 3.0.0)
+  ruby-go!
 
 BUNDLED WITH
-   1.15.4
+   2.1.4

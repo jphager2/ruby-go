@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+require 'ruby-go'
+require 'ruby-go/printers/text'
+
+game = RubyGo::Game.new
+printer = RubyGo::TextPrinter.new($stdout)
+
+Signal.trap("INTERUPT") do
+  puts "\nGoodbye"
+  exit 1
+end
+
+def prompt_for_turn(game)
+  loop do
+    print 'Enter "Pass" or enter coordinates x, y for move (e.g. "4, 4"): '
+    ans = gets.chomp.downcase.gsub(/\s/, '')
+
+    return if ans =~ /pass/
+
+    return ans.split(',').collect {|c| Integer(c)} if ans =~/\d+,\d+/
+  end
+end
+
+def update_terminal(printer, game)
+  system "clear"
+  printer.print_game(game)
+end
+
+update_terminal(printer, game)
+
+turn = 0
+until game.passes >= 2
+  begin
+    if turn % 2 == 0
+      #black's turn
+      puts "Black's turn"
+      move = prompt_for_turn(game)
+      move ? game.place_black(*move) : game.black_pass
+    else
+      #white's turn
+      puts "White's turn"
+      move = prompt_for_turn(game)
+      move ? game.place_white(*move) : game.white_pass
+    end
+
+    update_terminal(printer, game)
+
+    turn += 1
+  rescue RubyGo::Game::IllegalMove => e
+    puts e.message
+    next
+  end
+end
+
+puts "Game over"

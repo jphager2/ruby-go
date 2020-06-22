@@ -2,8 +2,7 @@ require_relative 'lib/ruby-go/version'
 
 files = Dir.glob(Dir.pwd + '/**/*.rb')
 files.collect! {|file| file.sub(Dir.pwd + '/', '')}
-files -= files.select {|file| file =~ /scripts/}
-files.push('LICENSE', 'README.md', 'Rakefile', 'bin/ruby-go.rb')
+files.push('LICENSE', 'README.md', 'Rakefile', 'bin/rubygo')
 
 Gem::Specification.new do |s|
   s.name        = 'ruby-go'
@@ -15,7 +14,8 @@ Gem::Specification.new do |s|
   s.authors     = ['jphager2']
   s.email       = 'jphager2@gmail.com'
   s.files       = files
-  s.executables << 'ruby-go.rb'
+  s.executables << 'rubygo'
   s.license     = 'MIT'
+
   s.add_runtime_dependency 'SgfParser', '~> 3.0.0'
 end

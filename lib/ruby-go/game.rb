@@ -24,19 +24,11 @@ module RubyGo
       sgf << ')'
     end
 
-    def view 
-      puts  board
-      puts  "   " + "_"*(board.size * 2)
-      print "   Prisoners || White: #{captures[:black]} |"
-      puts  " Black: #{captures[:white]}"
-      puts  "   " + "-"*(board.size * 2)
-    end
-
-    def black(x, y)
+    def place_black(x, y)
       play(Stone.new(x, y, :black))
     end
 
-    def white(x, y)
+    def place_white(x, y)
       play(Stone.new(x, y, :white))
     end
 
@@ -83,10 +75,21 @@ module RubyGo
     end
 
     def check_illegal_placement!(stone)
-      unless board.at(*stone.to_coord).empty? 
+      coord = stone.to_coord
+
+      if coord.any? { |i| i < 0 || i >= board.size }
         raise(
-          Game::IllegalMove, 
-          "You cannot place a stone on top of another stone."  
+          Game::IllegalMove,
+          "You cannot place a stone off the board."
+        )
+      end
+
+      intersection = board.at(*coord)
+
+      unless intersection.empty?
+        raise(
+          Game::IllegalMove,
+          "You cannot place a stone on top of another stone."
         )
       end
     end

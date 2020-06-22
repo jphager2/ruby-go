@@ -4,8 +4,8 @@ module RubyGo
       true
     end
 
-    def to_s
-      Board::COLORS[:empty] 
+    def color
+      :empty
     end
   end
 end

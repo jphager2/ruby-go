@@ -6,7 +6,7 @@ module RubyGo
 
     def initialize(x_coord, y_coord, color)
       @x_coord = x_coord
-      @y_coord = y_coord 
+      @y_coord = y_coord
       @color = color
     end
 
@@ -24,10 +24,6 @@ module RubyGo
       [x_coord, y_coord]
     end
 
-    def to_s
-      Board::COLORS[color] 
-    end
-
     def ==(other)
       other.is_a?(Stone) &&
         (color == other.color) &&
@@ -36,7 +32,7 @@ module RubyGo
   end
 
   # This can be changed to a Pass object
-  class NullStone < Stone 
+  class NullStone < Stone
     def initialize(color = :empty)
       @x_coord = nil
       @y_coord = nil
@@ -46,7 +42,7 @@ module RubyGo
     def to_sgf
       ";#{color.to_s[0].upcase}[]"
     end
-    
+
     def empty?
       true
     end
