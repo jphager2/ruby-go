@@ -8,11 +8,13 @@ GEM
   remote: https://rubygems.org/
   specs:
     SgfParser (3.0.1)
+    rdoc (6.2.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  rdoc
   ruby-go!
 
 BUNDLED WITH
