@@ -5,7 +5,7 @@ A gem that implements the rules of go (igo, weiqi, baduk).
 ## Use
 
 ```
-game = RubyGo::Game(board: 19)
+game = RubyGo::Game.new(board: 19)
 game.place_black(3,3)
 game.place_white(15,15)
 
